@@ -5,7 +5,7 @@ describe User do
   before(:each) do
     @attr = {
       :name => "Example User",
-      :email => "user@examle.com",
+      :email => "user@example.com",
       :password => "foobar",
       :password_confirmation => "foobar"
     }
@@ -112,8 +112,45 @@ describe User do
     it "should set the encrypted password attribute", :chapter7 => true do
       @user.encrypted_password.should_not be_blank
     end
+
+    it "should have a salt", :chapter7 =>true do
+      @user.should respond_to(:salt)
+    end
+
+    describe "has_password? method" do
+      it "should exist", :chapter7 => true do
+        @user.should respond_to(:has_password?)
+      end
+
+      it "should return true if the passwords match", :chapter7 => true do
+        @user.has_password?(@attr[:password]).should be_true
+      end
+
+      it "should return false if the passwords don't match", :chapter7 => true do
+        @user.has_password?("invalid").should be_false
+      end
+
+      describe "authenticate method" do
+        it "should exist", :chapter7 => true do
+          User.should respond_to(:authenticate)
+        end
+
+        it "should return nil on email/password mismatch", :chapter7 => true do
+          User.authenticate(@attr[:email], "wrongpass").should be_nil
+        end
+
+        it "should return nil for an email address with no user", :chapter7 => true do
+          User.authenticate("bar@foo.com", @attr[:password]).should be_nil
+        end
+
+        it "should return the user on email/password match", :chapter7 => true do
+          User.authenticate(@attr[:email], @attr[:password]).should == @user
+        end
+      end
+    end
   end
 end
+
 
 
 # == Schema Information
@@ -126,5 +163,6 @@ end
 #  created_at         :datetime
 #  updated_at         :datetime
 #  encrypted_password :string(255)
+#  salt               :string(255)
 #
 
