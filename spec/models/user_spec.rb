@@ -108,6 +108,10 @@ describe User do
     it "should have an encrypted password attribute", :chapter7 => true do
       @user.should respond_to(:encrypted_password)
     end
+
+    it "should set the encrypted password attribute", :chapter7 => true do
+      @user.encrypted_password.should_not be_blank
+    end
   end
 end
 
