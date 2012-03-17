@@ -29,9 +29,15 @@ describe UsersController do
       response.should have_selector('h1', :content => @user.name)
     end
 
-    it "should hve a profile image", :chapter7 => true do
+    it "should have a profile image", :chapter7 => true do
       get :show, :id => @user
       response.should have_selector('h1>img', :class => "gravatar" )
+    end
+
+    it "should have the right URL", :chapter7 => true do
+      get :show, :id => @user
+      response.should have_selector('td>a', :content => user_path(@user),
+                                            :href    => user_path(@user))
     end
   end
 
